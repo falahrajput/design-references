@@ -13,6 +13,8 @@ Each reference file documents: exact color tokens (with hex codes), typography s
 - [guild.ai](reference_design_guild.md) — AI agent control plane. Warm cream `#f8f6f3` + black, full dark mode (`#141413`), Syndicat Grotesk + Suisse Neue, GitHub-dark inline code, signature orange `#ff5500` selection accent.
 - [varickagents.com](reference_design_varickagents.md) — Enterprise AI ops. Off-white `#f8f8f8`, electric blue `#0099ff` + navy `#10296e` CTAs, square-cornered buttons, signature SVG `<animateMotion>` particle-wave hero. Built in Framer.
 - [generalintelligencecompany.com](reference_design_generalintelligencecompany.md) — Boutique applied-AI-lab editorial. PP Mondwest display serif + custom "af" sans + Geist Mono, warm cream `#f9faf7`, hand-drawn sun glyph, generous 24px card radius. Tailwind v4. Monochrome warm-grayscale (no brand hue).
+- [velvet.vc](reference_design_velvet.md) — Couture editorial private-capital network. Three serifs (Gloock display + Calluna body via Typekit + Geist Sans/Mono), warm cream `#fbf8f3` + stone `#cdbfb5`, multi-hue magazine accents (oxblood `#831c1a`, rust `#d83d26`, teal `#0089a2`, sand `#ddca9e`), 28–40px card radius, full-bleed video hero.
+- [modal.com](reference_design_modal.md) — AI infra cloud with extreme token discipline. Degular Display+Text+base via Typekit, signature lime green `#7fee64`, 16-step gray ladder + named green/blue/orange ladders + 8-color dataviz palette, dark surfaces (`#181818`+), sharp 5–10px radius, Fira Mono + KaTeX. SvelteKit.
 
 ## Demos
 
