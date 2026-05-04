@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Rotating Wireframe Globe — Cloudflare-style</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  :root {
+    --bg: #fbf6ef;
+    --ink: #2b160b;
+    --muted: #8a6452;
+    --orange: #f6821f;     /* Cloudflare brand orange */
+    --orange-line: #f1a36a;/* lighter wireframe stroke */
+    --orange-soft: #fde0c7;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+
+  .section {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 64px 32px 0;
+    text-align: center;
+  }
+  h1 {
+    margin: 0 0 12px;
+    font-size: clamp(36px, 5vw, 56px);
+    letter-spacing: -0.02em;
+    font-weight: 700;
+  }
+  p.lede {
+    margin: 0 auto 24px;
+    color: var(--muted);
+    font-size: 16px;
+    max-width: 560px;
+    line-height: 1.55;
+  }
+
+  /* The globe lives in a tall stage; the canvas sits behind annotations */
+  .stage {
+    position: relative;
+    width: 100%;
+    height: 560px;
+    margin: 0 auto;
+    max-width: 1100px;
+  }
+  canvas { display: block; width: 100%; height: 100%; }
+
+  /* Annotation callout — recreates the bracketed boxes from the screenshot */
+  .callout {
+    position: absolute;
+    width: 220px;
+    padding: 12px 14px;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 13px;
+    line-height: 1.4;
+    border-radius: 2px;
+    z-index: 2;
+  }
+  .callout::before, .callout::after {
+    content: "";
+    position: absolute;
+    width: 14px; height: 14px;
+    border: 1.5px solid var(--orange);
+  }
+  .callout::before {
+    top: -1px; left: -1px;
+    border-right: 0; border-bottom: 0;
+  }
+  .callout::after {
+    bottom: -1px; right: -1px;
+    border-left: 0; border-top: 0;
+  }
+  .callout strong { display: block; margin-bottom: 4px; }
+  .callout--left  { top: 30%; left: 8%; }
+  .callout--right { top: 38%; right: 6%; max-width: 240px; }
+
+  .feature-row {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+    border: 1.5px solid var(--orange-soft);
+    border-radius: 2px;
+    position: relative;
+  }
+  .feature-row::before, .feature-row::after,
+  .feature-row > div::before, .feature-row > div::after {
+    /* corner brackets */
+  }
+  .feature {
+    padding: 24px;
+    border-right: 1px solid var(--orange-soft);
+  }
+  .feature:last-child { border-right: 0; }
+  .feature .icon { font-size: 18px; opacity: .8; margin-bottom: 10px; }
+  .feature h3 { margin: 0 0 8px; font-size: 15px; }
+  .feature p { margin: 0; color: var(--muted); font-size: 13px; line-height: 1.5; }
+  .feature b { color: var(--ink); }
+</style>
+</head>
+<body>
+  <div class="section">
+    <h1>Region: Earth</h1>
+    <p class="lede">One smart network for workloads + security — close to users, close to data.</p>
+  </div>
+
+  <div class="stage" id="stage">
+    <div class="callout callout--left">
+      <strong>4.5x faster</strong>
+      Faster for 95% of round trips by running Workers near your backend, not you.
+    </div>
+    <div class="callout callout--right">
+      95% of the world's Internet-connected population is reachable via Cloudflare within 50ms.
+    </div>
+    <canvas id="globe"></canvas>
+  </div>
+
+  <div class="feature-row">
+    <div class="feature">
+      <div class="icon">🌐</div>
+      <h3>Run everywhere</h3>
+      <p>Run code in <b>330+ cities</b> around the world, within 50ms of 95% of the world's population.</p>
+    </div>
+    <div class="feature">
+      <div class="icon">📍</div>
+      <h3>Run anywhere</h3>
+      <p>Run code near the user, database, or near your APIs. Our smart network will schedule your requests to optimize for the best latency.</p>
+    </div>
+    <div class="feature">
+      <div class="icon">⌗</div>
+      <h3>Run at massive scale</h3>
+      <p>Run on Cloudflare's infrastructure, supporting <b>449 Tbps</b> of network capacity, serving over <b>81 million</b> HTTP requests per second.</p>
+    </div>
+  </div>
+
+  <!-- Three.js via CDN -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+    }
+  }
+  </script>
+  <script type="module">
+    import * as THREE from 'three';
+
+    // ----- Setup -----
+    const stage  = document.getElementById('stage');
+    const canvas = document.getElementById('globe');
+
+    const renderer = new THREE.WebGLRenderer({
+      canvas,
+      antialias: true,
+      alpha: true,        // transparent so the page bg shows through
+    });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    const scene  = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+    camera.position.set(0, 0, 4.5);
+
+    function resize() {
+      const w = stage.clientWidth;
+      const h = stage.clientHeight;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    // ----- Globe (lat/lng wireframe) -----
+    // We don't use the default SphereGeometry wireframe (it triangulates
+    // and looks busy). Instead we draw clean parallels (latitude rings)
+    // and meridians (longitude half-circles) as Line objects.
+    const RADIUS = 1.5;
+    const LAT_STEPS = 12;          // parallels
+    const LNG_STEPS = 24;          // meridians
+    const SEG = 96;                // smoothness per ring
+
+    const lineMat = new THREE.LineBasicMaterial({
+      color: 0xf1a36a,             // --orange-line
+      transparent: true,
+      opacity: 0.55,
+    });
+
+    const globe = new THREE.Group();
+    scene.add(globe);
+
+    // Parallels: full circles at given latitude
+    for (let i = 1; i < LAT_STEPS; i++) {
+      const phi = (i / LAT_STEPS) * Math.PI;        // 0..π
+      const y   = RADIUS * Math.cos(phi);
+      const r   = RADIUS * Math.sin(phi);
+      const pts = [];
+      for (let s = 0; s <= SEG; s++) {
+        const t = (s / SEG) * Math.PI * 2;
+        pts.push(new THREE.Vector3(r * Math.cos(t), y, r * Math.sin(t)));
+      }
+      const geom = new THREE.BufferGeometry().setFromPoints(pts);
+      globe.add(new THREE.Line(geom, lineMat));
+    }
+
+    // Meridians: half-circles from pole to pole
+    for (let i = 0; i < LNG_STEPS; i++) {
+      const lng = (i / LNG_STEPS) * Math.PI * 2;
+      const pts = [];
+      for (let s = 0; s <= SEG; s++) {
+        const phi = (s / SEG) * Math.PI;
+        const y = RADIUS * Math.cos(phi);
+        const r = RADIUS * Math.sin(phi);
+        pts.push(new THREE.Vector3(r * Math.cos(lng), y, r * Math.sin(lng)));
+      }
+      const geom = new THREE.BufferGeometry().setFromPoints(pts);
+      globe.add(new THREE.Line(geom, lineMat));
+    }
+
+    // Slight tilt — like Earth's axial tilt; reads as "globe" not "ball"
+    globe.rotation.z = 0.18;
+
+    // ----- Pins (small dots on the surface) -----
+    function latLngToVec3(latDeg, lngDeg, r = RADIUS) {
+      const lat = (90 - latDeg) * Math.PI / 180;
+      const lng = (lngDeg + 180) * Math.PI / 180;
+      return new THREE.Vector3(
+        -r * Math.sin(lat) * Math.cos(lng),
+         r * Math.cos(lat),
+         r * Math.sin(lat) * Math.sin(lng)
+      );
+    }
+
+    const pins = [
+      { lat:  37, lng: -122, color: 0xf6821f, r: 0.05 }, // SF
+      { lat:  51, lng:    0, color: 0xf6821f, r: 0.05 }, // London
+      { lat:   1, lng:  104, color: 0xf6821f, r: 0.06 }, // Singapore (the big diamond)
+      { lat: -34, lng:  151, color: 0xf6821f, r: 0.04 }, // Sydney
+      { lat:  35, lng:  140, color: 0xf6821f, r: 0.04 }, // Tokyo
+    ];
+
+    pins.forEach(p => {
+      const geo = new THREE.SphereGeometry(p.r, 16, 16);
+      const mat = new THREE.MeshBasicMaterial({ color: p.color });
+      const mesh = new THREE.Mesh(geo, mat);
+      mesh.position.copy(latLngToVec3(p.lat, p.lng, RADIUS + 0.01));
+      globe.add(mesh);
+    });
+
+    // ----- Arcs between pins (great-circle interpolation) -----
+    // A great-circle arc from A to B is a slerp on the unit sphere.
+    function buildArc(latA, lngA, latB, lngB, height = 0.45, segments = 80) {
+      const a = latLngToVec3(latA, lngA, RADIUS).normalize();
+      const b = latLngToVec3(latB, lngB, RADIUS).normalize();
+      const omega = Math.acos(Math.min(1, a.dot(b)));
+      const sinO  = Math.sin(omega) || 1e-6;
+
+      const pts = [];
+      for (let i = 0; i <= segments; i++) {
+        const t = i / segments;
+        // Spherical interpolation
+        const k0 = Math.sin((1 - t) * omega) / sinO;
+        const k1 = Math.sin(t * omega) / sinO;
+        const dir = a.clone().multiplyScalar(k0).add(b.clone().multiplyScalar(k1));
+        // Lift it off the surface in a parabolic arc (peak at midpoint)
+        const lift = 1 + Math.sin(t * Math.PI) * height;
+        pts.push(dir.multiplyScalar(RADIUS * lift));
+      }
+      return pts;
+    }
+
+    // The "live" arc — animates progress from 0 → 1 then loops
+    const arcRoutes = [
+      [37, -122, 1, 104],      // SF → Singapore
+      [51,    0, 35, 140],     // London → Tokyo
+      [-34, 151, 37, -122],    // Sydney → SF
+    ];
+
+    const arcMat = new THREE.LineBasicMaterial({
+      color: 0xf6821f,
+      transparent: true,
+      opacity: 0.95,
+    });
+
+    const arcs = arcRoutes.map((r, i) => {
+      const fullPts = buildArc(...r, 0.35 + i * 0.05);
+      const geom = new THREE.BufferGeometry();
+      geom.setFromPoints(fullPts);
+      // We'll animate by setting drawRange to reveal/hide segments over time
+      const line = new THREE.Line(geom, arcMat.clone());
+      line.geometry.setDrawRange(0, 0);
+      globe.add(line);
+      return { line, pts: fullPts, phase: i * 0.33 };
+    });
+
+    // ----- Animation loop -----
+    const clock = new THREE.Clock();
+    function tick() {
+      const dt = clock.getDelta();
+      const t  = clock.elapsedTime;
+
+      // Steady globe rotation around Y axis
+      globe.rotation.y += dt * 0.12;  // ~1 rev / 52s
+
+      // Animate arc reveal (head moves around, tail follows)
+      arcs.forEach(arc => {
+        const period = 4.5;
+        const local  = ((t + arc.phase * period) % period) / period;
+        const total  = arc.pts.length;
+        const head   = Math.floor(local * total);
+        const tail   = Math.floor(Math.max(0, local - 0.45) * total);
+        arc.line.geometry.setDrawRange(tail, head - tail);
+        arc.line.material.opacity = 0.95 * (1 - Math.abs(local - 0.5) * 0.4);
+      });
+
+      renderer.render(scene, camera);
+      requestAnimationFrame(tick);
+    }
+    tick();
+  </script>
+</body>
+</html>
