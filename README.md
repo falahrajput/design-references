@@ -12,6 +12,7 @@ Each reference file documents: exact color tokens (with hex codes), typography s
 - [adaline.ai](reference_design_adaline.md) — AI-infra dev platform. Warm off-white `#f8f9f5`, olive-forest primary `#4a6d47`, deep-olive text, Akkurat + fragmentMono, Material 3 surface tokens, conservative 8–12px radius.
 - [guild.ai](reference_design_guild.md) — AI agent control plane. Warm cream `#f8f6f3` + black, full dark mode (`#141413`), Syndicat Grotesk + Suisse Neue, GitHub-dark inline code, signature orange `#ff5500` selection accent.
 - [varickagents.com](reference_design_varickagents.md) — Enterprise AI ops. Off-white `#f8f8f8`, electric blue `#0099ff` + navy `#10296e` CTAs, square-cornered buttons, signature SVG `<animateMotion>` particle-wave hero. Built in Framer.
+- [generalintelligencecompany.com](reference_design_generalintelligencecompany.md) — Boutique applied-AI-lab editorial. PP Mondwest display serif + custom "af" sans + Geist Mono, warm cream `#f9faf7`, hand-drawn sun glyph, generous 24px card radius. Tailwind v4. Monochrome warm-grayscale (no brand hue).
 
 ## Demos
 
