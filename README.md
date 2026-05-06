@@ -17,6 +17,10 @@ Each reference file documents: exact color tokens (with hex codes), typography s
 - [modal.com](reference_design_modal.md) — AI infra cloud with extreme token discipline. Degular Display+Text+base via Typekit, signature lime green `#7fee64`, 16-step gray ladder + named green/blue/orange ladders + 8-color dataviz palette, dark surfaces (`#181818`+), sharp 5–10px radius, Fira Mono + KaTeX. SvelteKit.
 - [workers.cloudflare.com](reference_design_workerscloudflare.md) — Cloudflare Workers / edge serverless. Warm cream `#fffbf5`, signature oxblood text `#521000` (not black), Cloudflare orange `#ff4801` accent + AI green `#5eff3a` sub-accent, FT Kunst Grotesk + Apercu Mono Pro, semantic token system (foreground/background/accent/ai ladders × light+dark mode), bracket-corner annotation pattern, Three.js "Region: Earth" wireframe globe. Built in Astro.
 
+## Collections (libraries, not single sites)
+
+- [Zara Zhang's beautiful-html-templates](reference_collection_zara_html_templates.md) — Library of **32 hand-designed HTML slide templates** with machine-readable metadata (`index.json`) so coding agents can match a brief to a template and produce a finished deck without designing from scratch. *De facto* anti-slop kit for AI-generated decks. Use when the deliverable is a slide deck.
+
 ## Demos
 
 - [Particle Wave Animation](demos/particle-wave.html) — Recreation of the Varick Agents hero animation. Pure SVG with `<animateMotion>` along invisible paths. No JS frameworks, no canvas. Open in a browser.
@@ -41,6 +45,7 @@ Find the row that matches the vibe you're after, then open the linked reference 
 | **Dark mode done well** | [modal.com](reference_design_modal.md), [workers.cloudflare.com](reference_design_workerscloudflare.md), [guild.ai](reference_design_guild.md) |
 | **Discipline-grade token systems** | [modal.com](reference_design_modal.md) (named ladders + dataviz), [workers.cloudflare.com](reference_design_workerscloudflare.md) (semantic tokens × light+dark) |
 | **Hero animation ideas** | [varickagents.com](reference_design_varickagents.md) (SVG particle wave), [workers.cloudflare.com](reference_design_workerscloudflare.md) (Three.js globe), [guild.ai](reference_design_guild.md) (choreographed pulse + logo marquee) |
+| **Building a slide deck (HTML)** | [Zara's beautiful-html-templates](reference_collection_zara_html_templates.md) — 32 curated templates, agent-readable index |
 | **Code-forward dev sites (real code on landing)** | [guild.ai](reference_design_guild.md), [modal.com](reference_design_modal.md), [workers.cloudflare.com](reference_design_workerscloudflare.md) |
 | **Square / brutalist / blueprint** | [varickagents.com](reference_design_varickagents.md) (square CTAs), [tahahossain.com](reference_design_tahahossain.md) (hairline grid) |
 
