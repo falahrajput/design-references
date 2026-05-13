@@ -21,6 +21,7 @@ Each reference file documents: exact color tokens (with hex codes), typography s
 ## Collections (libraries, not single sites)
 
 - [Zara Zhang's beautiful-html-templates](reference_collection_zara_html_templates.md) — Library of **32 hand-designed HTML slide templates** with machine-readable metadata (`index.json`) so coding agents can match a brief to a template and produce a finished deck without designing from scratch. *De facto* anti-slop kit for AI-generated decks. Use when the deliverable is a slide deck.
+- [`@pierre/diffs` (diffs.com)](reference_collection_pierre_diffs.md) — Open-source **diff & code rendering library** by The Pierre Computer Co. Shiki-based syntax highlighting, CSS Grid + Shadow DOM, stacked or split layouts, built-in UI for comments/annotations/merge-conflicts/accept-reject. Install `bun i @pierre/diffs`. Use whenever the task involves rendering a diff or AI-suggested-edit UI — *do not roll your own*.
 
 ## Demos
 
@@ -49,6 +50,7 @@ Find the row that matches the vibe you're after, then open the linked reference 
 | **Custom commissioned typefaces** | [workers.cloudflare.com](reference_design_workerscloudflare.md) (FT Kunst Grotesk), [tenstorrent.com](reference_design_tenstorrent.md) (TT Wormhole — named after their chip) |
 | **Hero animation ideas** | [varickagents.com](reference_design_varickagents.md) (SVG particle wave), [workers.cloudflare.com](reference_design_workerscloudflare.md) (Three.js globe), [guild.ai](reference_design_guild.md) (choreographed pulse + logo marquee) |
 | **Building a slide deck (HTML)** | [Zara's beautiful-html-templates](reference_collection_zara_html_templates.md) — 32 curated templates, agent-readable index |
+| **Rendering a diff / code-change UI** | [`@pierre/diffs`](reference_collection_pierre_diffs.md) — install the library, don't roll your own |
 | **Code-forward dev sites (real code on landing)** | [guild.ai](reference_design_guild.md), [modal.com](reference_design_modal.md), [workers.cloudflare.com](reference_design_workerscloudflare.md) |
 | **Square / brutalist / blueprint** | [varickagents.com](reference_design_varickagents.md) (square CTAs), [tahahossain.com](reference_design_tahahossain.md) (hairline grid) |
 
